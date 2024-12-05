@@ -1,36 +1,35 @@
-package com.dayanna.appmvvmdos.view
+package com.dayanna.appmvvmdos.ui.view
 
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import com.dayanna.appmvvmdos.databinding.ActivityMainBinding
-import com.dayanna.appmvvmdos.viewmodel.QuoteViewModel
+import com.dayanna.appmvvmdos.ui.viewmodel.QuoteViewModel
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val quoteViewModel : QuoteViewModel by viewModels ()
-
-
-
-
+    private val quoteViewModel: QuoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
         setContentView(binding.root)
 
-// Llamado del observador para comprobar el estado de la
+        quoteViewModel.onCreate()
+
+        // Llamado del observador para comprobar el estado de la
         // variable MutableLiveData
         quoteViewModel.quoteModel.observe(this, Observer {
             binding.tvQuote.text = it.quote
-            binding.tvAuthor.text =it.author
+            binding.tvAuthor.text = it.author
+        })
 
+        quoteViewModel.isLoading.observe(this, Observer {
+            binding.pgBar.isVisible = it
         })
 
         binding.viewContainer.setOnClickListener {
